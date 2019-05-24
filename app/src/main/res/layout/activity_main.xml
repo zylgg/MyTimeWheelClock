@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <com.example.admin.mytimewheelclock.AutoRotateSecondView
+        android:id="@+id/timeView_second"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.example.admin.mytimewheelclock.AutoRotateMinuteView
+        android:id="@+id/timeView_minute"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.example.admin.mytimewheelclock.AutoRotateHoursView
+        android:id="@+id/timeView_hours"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.example.admin.mytimewheelclock.AutoRotateDayView
+        android:id="@+id/timeView_day"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.example.admin.mytimewheelclock.AutoRotateMonthView
+        android:id="@+id/timeView_month"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/timeView_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="2019"
+        android:layout_marginLeft="4dp"
+        android:textColor="#ffffff"
+        android:textSize="12dp" />
+
+    <View
+        android:id="@+id/v_dividing2"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/myshape"
+        android:visibility="visible" />
+
+
+</RelativeLayout>
