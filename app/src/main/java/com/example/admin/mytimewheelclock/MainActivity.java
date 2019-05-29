@@ -2,6 +2,7 @@ package com.example.admin.mytimewheelclock;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private AutoRotateSecondView timeView_second;
     private AutoRotateMinuteView timeView_minute;
     private AutoRotateHoursView timeView_hours;
+    private AutoRotateWeekView timeView_week;
     private AutoRotateDayView timeView_day;
     private AutoRotateMonthView timeView_month;
     private TextView timeView_year;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         timeView_second = (AutoRotateSecondView) findViewById(R.id.timeView_second);
         timeView_minute = (AutoRotateMinuteView) findViewById(R.id.timeView_minute);
         timeView_hours = (AutoRotateHoursView) findViewById(R.id.timeView_hours);
+        timeView_week = findViewById(R.id.timeView_week);
         timeView_day = (AutoRotateDayView) findViewById(R.id.timeView_day);
         timeView_month = (AutoRotateMonthView) findViewById(R.id.timeView_month);
         timeView_year = (TextView) findViewById(R.id.timeView_year);
@@ -82,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
+        int week = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int hours = calendar.get(Calendar.HOUR_OF_DAY);
         int minutes = calendar.get(Calendar.MINUTE);
@@ -89,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        Log.i("Calendar_years", "-" + year);
 //        Log.i("Calendar_month", "-" + month);
+        Log.i("Calendar_week", "-" + week);
 //        Log.i("Calendar_day", "-" + day);
 //        Log.i("Calendar_hours", "-" + hours);
 //        Log.i("Calendar_minutes", "-" + minutes);
@@ -97,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         timeView_second.setTime(seconds).start();
         timeView_minute.setTime(minutes).start();
         timeView_hours.setTime(hours).start();
+        timeView_week.setTime(week).start();
         timeView_day.setTime(day, DateUtils.getDays(year, month)).start();
         timeView_month.setTime(month, DateUtils.getDays(year, month)).start();
     }

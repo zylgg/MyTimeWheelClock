@@ -20,16 +20,19 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Toast;
 
+import com.example.admin.mytimewheelclock.utils.NumberToChineseUtils;
 import com.example.admin.mytimewheelclock.utils.SizeUtils;
 
+import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class AutoRotateSecondView extends View {
+public class AutoRotateWeekView extends View {
 
     private Context mContext;
     private Paint mPaint, mSelectedPaint;
-    private float mSecondDegree;
+    private float mWeekDegree;
     private int borderColor;
     private int textColor;
     private float textSize;
@@ -40,17 +43,18 @@ public class AutoRotateSecondView extends View {
     private String centerPointType = "circle";
     private int sleepTime;
     private boolean isDrawText;
-    private String secondArray[] = new String[60];
+    private String weekArray[] = new String[7];
     private Timer mTimer = new Timer();
     private int circleRadius = 0;
-    private Handler mHandler = new Handler() {
+    private DecimalFormat format = new DecimalFormat("#");
+    private DecimalFormat decimalformat = new DecimalFormat("#0.00");
+    private Handler mhandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             startRotation();
         }
     };
-
     /**
      * 是否设置选中文字，
      */
@@ -58,7 +62,7 @@ public class AutoRotateSecondView extends View {
 
     private void startRotation() {
         AnimatorSet animatorSet = new AnimatorSet();
-        ValueAnimator rotation_15A = ObjectAnimator.ofFloat(this, "rotation", 360 - startDegrees, 360 - mSecondDegree);
+        ValueAnimator rotation_15A = ObjectAnimator.ofFloat(this, "rotation", 360 - startDegrees, 360 - mWeekDegree);
         rotation_15A.setInterpolator(new AccelerateInterpolator());
         rotation_15A.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -84,13 +88,13 @@ public class AutoRotateSecondView extends View {
         animatorSet.start();
     }
 
-    public AutoRotateSecondView(Context context) {
+    public AutoRotateWeekView(Context context) {
         super(context);
         this.mContext = context;
         initPainter();
     }
 
-    public AutoRotateSecondView(Context context, AttributeSet attrs) {
+    public AutoRotateWeekView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.mContext = context;
         init(context, attrs);
@@ -151,7 +155,6 @@ public class AutoRotateSecondView extends View {
         setTranslationX(-size / 2);
     }
 
-
     /**
      * 绘制（时、分、秒）数字之间的间隔
      */
@@ -175,26 +178,31 @@ public class AutoRotateSecondView extends View {
 //        drawCircleOut(canvas);
         //圆心
 //        drawCirclePoint(canvas);
-        //画秒针数字
-        drawSecondNumber(canvas);
+        //画时、分、秒针数字
+        drawHourNumber(canvas);
     }
 
 
     /**
-     * 应用打开初始化时间（例如1：30：30）
-     *
-     * @param second
+     * 月的时间轴一次转动的角度
      */
-    public AutoRotateSecondView setTime(int second) {
-        if (second >= 60 || second < 0) {
-            Toast.makeText(getContext(), "秒数-不合法", Toast.LENGTH_SHORT).show();
+    private float mWeekFirstDegree = 12.0f;
+
+    /**
+     * @param week
+     */
+    public AutoRotateWeekView setTime(int week) {
+        if (week < 1 || week > 7) {
+            Toast.makeText(getContext(), "星期-不合法", Toast.LENGTH_SHORT).show();
             return this;
         }
-        for (int i = 0; i < secondArray.length; i++) {
-            int currentSecond = second + i;
-            currentSecond = currentSecond >= 60 ? currentSecond - 60 : currentSecond;
-            secondArray[i] = (currentSecond + "秒");
+        for (int i = 0; i < weekArray.length; i++) {
+            int currentWeek = week + i;
+            currentWeek = currentWeek > 7 ? currentWeek - 7 : currentWeek;
+            //把时间字符小写转大写
+            weekArray[i] = ("周" + NumberToChineseUtils.intToChinese(currentWeek));
         }
+        mWeekFirstDegree = Float.parseFloat(decimalformat.format((360.0f / weekArray.length)));
         invalidate();
         return this;
     }
@@ -210,61 +218,62 @@ public class AutoRotateSecondView extends View {
     private TimerTask task = new TimerTask() {
         @Override
         public void run() {
-            if (mSecondDegree == 360) {
-                mSecondDegree = 0;
+            if (mWeekDegree == 360) {
+                mWeekDegree = 0;
             }
-            startDegrees = mSecondDegree;
-            //秒针：1秒（1000ms）走6°，即50ms走0.3°
-            mSecondDegree = mSecondDegree + 0.3f * sleepTime / 50;
-
-            mHandler.sendEmptyMessage(0);
+            Calendar calendar = Calendar.getInstance();
+            int hours = calendar.getTime().getHours();
+            int seconds = calendar.getTime().getSeconds();
+            int minutes = calendar.getTime().getMinutes();
+            // 23点0分0秒
+            if (hours == 23 && seconds == 59 && minutes == 59) {//到达了一小时了
+                startDegrees = mWeekDegree;
+                mWeekDegree = mWeekDegree + mWeekFirstDegree;
+                mhandler.sendEmptyMessage(0);
+            }
         }
     };
 
 
     /**
-     * 画秒钟 数字
+     * 画小时 数字
      *
      * @param canvas
      */
-    private void drawSecondNumber(Canvas canvas) {
+    private void drawHourNumber(Canvas canvas) {
         if (isDrawText) {
-            if (TextUtils.isEmpty(secondArray[0])) return;
+            if (weekArray == null || TextUtils.isEmpty(weekArray[0])) return;
             //旋转圆盘
-//            canvas.rotate(360 - mSecondDegree, getWidth() / 2, getHeight() / 2);
-
             canvas.save();
             mPaint.setColor(textColor);
             mPaint.setStyle(Paint.Style.FILL);
             mPaint.setStrokeWidth(1);
             mPaint.setTextSize(textSize);
             canvas.translate(getWidth() / 2, getHeight() / 2);
-            int currentDegree = 0;
-            for (int i = 0; i < secondArray.length; i++) {
+            float currentDegree = 0;
+            for (int i = 0; i < weekArray.length; i++) {
                 Rect textBound = new Rect();//创建一个矩形
-                String text = secondArray[i];
+                String text = weekArray[i];
                 //将文字装在上面创建的矩形中，即这个矩形就是文字的边框
                 mPaint.getTextBounds(text, 0, text.length(), textBound);
-                if (isSetSelectedText && (currentDegree + 360 - mSecondDegree) % 360 == 0) {
-                    canvas.drawText(text, circleRadius + getMaxTextWidth("60秒") + drawNumberSpace, textBound.height() / 2, mSelectedPaint);
+                //当前文字 绘制的水平角度
+                float curAllDegree = Float.parseFloat(format.format((currentDegree + 360 - mWeekDegree)));
+                //绘制文字的开始坐标
+                int drawTStartX = getMaxTextWidth("2019年") + drawNumberSpace +
+                        getMaxTextWidth("12月") + drawNumberSpace +
+                        getMaxTextWidth("31号") + drawNumberSpace;
+                if (isSetSelectedText && curAllDegree % 360 == 0) {
+                    canvas.drawText(text, drawTStartX, textBound.height() / 2, mSelectedPaint);
                 } else {
-                    canvas.drawText(text, circleRadius + getMaxTextWidth("60秒") + drawNumberSpace, textBound.height() / 2, mPaint);
+                    canvas.drawText(text, drawTStartX, textBound.height() / 2, mPaint);
                 }
-                canvas.rotate(6);
-                currentDegree = currentDegree + 6;
+                canvas.rotate(mWeekFirstDegree);
+                currentDegree = currentDegree + mWeekFirstDegree;
             }
             canvas.restore();
         }
     }
 
-    public int getViewMaxWidth() {
-        return (circleRadius + getMaxTextWidth("60秒") + drawNumberSpace + getMaxTextWidth("60秒"));
-    }
-
-    /**
-     * @param maxWText
-     * @return 根据最长的字，算出最大的宽度
-     */
     private int getMaxTextWidth(String maxWText) {
         mPaint.setColor(textColor);
         mPaint.setStyle(Paint.Style.FILL);
@@ -288,7 +297,6 @@ public class AutoRotateSecondView extends View {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setTextSize(textSize);
         canvas.drawCircle(getWidth() / 2, getHeight() / 2, circleRadius, mPaint);
-
     }
 
 
@@ -307,6 +315,5 @@ public class AutoRotateSecondView extends View {
             canvas.drawCircle(getWidth() / 2, getHeight() / 2, centerPointRadiu, mPaint);
         }
     }
-
 
 }

@@ -216,7 +216,7 @@ public class AutoRotateHoursView extends View {
             Calendar calendar = Calendar.getInstance();
             int seconds = calendar.getTime().getSeconds();
             int minutes = calendar.getTime().getMinutes();
-            if (seconds == 0 && minutes == 0) {//到达了一秒了
+            if (seconds == 59 && minutes == 59) {//到达了一秒了
                 startDegrees = mHourDegree;
                 mHourDegree = mHourDegree + 30;
                 mhandler.sendEmptyMessage(0);

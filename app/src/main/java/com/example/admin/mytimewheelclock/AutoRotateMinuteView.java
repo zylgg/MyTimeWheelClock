@@ -215,7 +215,7 @@ public class AutoRotateMinuteView extends View {
 
             Calendar calendar = Calendar.getInstance();
             int seconds = calendar.getTime().getSeconds();
-            if (seconds == 0) {//到达了一分钟了
+            if (seconds == 59) {//到达了一分钟了
                 startDegrees = mMinDegree;
                 mMinDegree = mMinDegree + 6;
                 mhandler.sendEmptyMessage(0);

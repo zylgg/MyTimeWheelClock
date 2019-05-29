@@ -237,7 +237,7 @@ public class AutoRotateMonthView extends View {
             int minutes = calendar.get(Calendar.MINUTE);
             int seconds = calendar.get(Calendar.SECOND);
             // 最后一天例如 2019年12月31日23点0分0秒
-            if (day == currentMonthAllDayCount && hours == 23 && seconds == 0 && minutes == 0) {//到达了一天了
+            if (day == currentMonthAllDayCount && hours == 23 && seconds == 59 && minutes == 59) {//到达了一天了
                 startDegrees = mDayDegree;
                 if (month == 12) {
                     //改变年

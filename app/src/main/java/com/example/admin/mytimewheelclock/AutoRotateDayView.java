@@ -227,7 +227,7 @@ public class AutoRotateDayView extends View {
             int seconds = calendar.getTime().getSeconds();
             int minutes = calendar.getTime().getMinutes();
             // 23点0分0秒
-            if (hours == 23 && seconds == 0 && minutes == 0) {//到达了一小时了
+            if (hours == 23 && seconds == 59 && minutes == 59) {//到达了一小时了
                 startDegrees = mDayDegree;
                 mDayDegree = mDayDegree + mDayFirstDegree;
                 mhandler.sendEmptyMessage(0);
