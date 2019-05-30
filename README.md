@@ -1,4 +1,4 @@
-# MyTimeWheelClock
+# MyTimeWheelClock(以下效果为首次上传版本，最新的以源码为准)
 ## 一个仿抖音的时间钟轮盘
 ![效果图](https://github.com/zylgg/MyTimeWheelClock/blob/master/Files/test.jpg)
 
