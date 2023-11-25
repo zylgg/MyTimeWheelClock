@@ -121,9 +121,11 @@ public class AutoRotateHoursView extends View {
         if (TextUtils.isEmpty(centerPointType)) {
             centerPointType = "circle";
         }
+        isShowHalf=ta.getBoolean(R.styleable.TimeView_isShowHalf,true);
         sleepTime = 1000;
         ta.recycle();
     }
+    private boolean isShowHalf;
 
     /**
      * 初始化画笔
@@ -148,7 +150,7 @@ public class AutoRotateHoursView extends View {
         int size = SizeUtils.measureSize(mContext, widthMeasureSpec);
         int sizeH = SizeUtils.measureSize(mContext, heightMeasureSpec);
         setMeasuredDimension(sizeH, sizeH);
-        setTranslationX(-size / 2);
+        if (isShowHalf)setTranslationX(-size / 2);
     }
 
     /**
@@ -247,9 +249,9 @@ public class AutoRotateHoursView extends View {
                 //将文字装在上面创建的矩形中，即这个矩形就是文字的边框
                 mPaint.getTextBounds(text, 0, text.length(), textBound);
                 if (isSetSelectedText && (currentDegree + 360 - mHourDegree) % 360 == 0) {
-                    canvas.drawText(text, circleRadius - getMaxTextWidth("60分") - drawNumberSpace, textBound.height() / 2, mSelectedPaint);
+                    canvas.drawText(text, circleRadius - getMaxTextWidth("60分") , textBound.height() / 2, mSelectedPaint);
                 } else {
-                    canvas.drawText(text, circleRadius - getMaxTextWidth("60分") - drawNumberSpace, textBound.height() / 2, mPaint);
+                    canvas.drawText(text, circleRadius - getMaxTextWidth("60分") , textBound.height() / 2, mPaint);
                 }
                 canvas.rotate(30);
                 currentDegree = currentDegree + 30;

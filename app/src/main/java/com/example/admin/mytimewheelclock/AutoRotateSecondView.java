@@ -43,6 +43,10 @@ public class AutoRotateSecondView extends View {
     private String secondArray[] = new String[60];
     private Timer mTimer = new Timer();
     private int circleRadius = 0;
+    /**
+     * 是否显示一半
+     */
+    private boolean isShowHalf=true;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -121,6 +125,7 @@ public class AutoRotateSecondView extends View {
         if (TextUtils.isEmpty(centerPointType)) {
             centerPointType = "circle";
         }
+        isShowHalf=ta.getBoolean(R.styleable.TimeView_isShowHalf,true);
         sleepTime = 1000;
         ta.recycle();
     }
@@ -148,7 +153,7 @@ public class AutoRotateSecondView extends View {
         int size = SizeUtils.measureSize(mContext, widthMeasureSpec);
         int sizeH = SizeUtils.measureSize(mContext, heightMeasureSpec);
         setMeasuredDimension(sizeH, sizeH);
-        setTranslationX(-size / 2);
+        if (isShowHalf)setTranslationX(-size / 2);
     }
 
 

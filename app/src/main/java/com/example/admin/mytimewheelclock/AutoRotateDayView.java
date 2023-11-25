@@ -124,6 +124,7 @@ public class AutoRotateDayView extends View {
         if (TextUtils.isEmpty(centerPointType)) {
             centerPointType = "circle";
         }
+        isShowHalf=ta.getBoolean(R.styleable.TimeView_isShowHalf,true);
         sleepTime = 1000;
         ta.recycle();
     }
@@ -145,13 +146,16 @@ public class AutoRotateDayView extends View {
         mSelectedPaint.setStrokeWidth(1);
         mSelectedPaint.setTextSize(textSize);
     }
-
+    /**
+     * 是否显示一半
+     */
+    private boolean isShowHalf=true;
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int size = SizeUtils.measureSize(mContext, widthMeasureSpec);
         int sizeH = SizeUtils.measureSize(mContext, heightMeasureSpec);
         setMeasuredDimension(sizeH, sizeH);
-        setTranslationX(-size / 2);
+        if (isShowHalf)setTranslationX(-size / 2);
     }
 
     /**
@@ -201,7 +205,7 @@ public class AutoRotateDayView extends View {
         for (int i = 0; i < currentMonthAllDayCount; i++) {
             int currentDay = day + i;
             currentDay = currentDay > currentMonthAllDayCount ? currentDay - currentMonthAllDayCount : currentDay;
-            dayArray[i] = (currentDay + "号");
+            dayArray[i] = (currentDay + "");
         }
         mDayFirstDegree = Float.parseFloat(decimalformat.format((360.0f / dayArray.length)));
         invalidate();

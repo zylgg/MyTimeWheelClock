@@ -59,6 +59,10 @@ public class AutoRotateWeekView extends View {
      * 是否设置选中文字，
      */
     private boolean isSetSelectedText = true;
+    /**
+     * 是否显示一半
+     */
+    private boolean isShowHalf=true;
 
     private void startRotation() {
         AnimatorSet animatorSet = new AnimatorSet();
@@ -125,6 +129,7 @@ public class AutoRotateWeekView extends View {
         if (TextUtils.isEmpty(centerPointType)) {
             centerPointType = "circle";
         }
+        isShowHalf=ta.getBoolean(R.styleable.TimeView_isShowHalf,true);
         sleepTime = 1000;
         ta.recycle();
     }
@@ -152,7 +157,7 @@ public class AutoRotateWeekView extends View {
         int size = SizeUtils.measureSize(mContext, widthMeasureSpec);
         int sizeH = SizeUtils.measureSize(mContext, heightMeasureSpec);
         setMeasuredDimension(sizeH, sizeH);
-        setTranslationX(-size / 2);
+        if (isShowHalf)setTranslationX(-size / 2);
     }
 
     /**
@@ -262,6 +267,9 @@ public class AutoRotateWeekView extends View {
                 int drawTStartX = getMaxTextWidth("2019年") + drawNumberSpace +
                         getMaxTextWidth("12月") + drawNumberSpace +
                         getMaxTextWidth("31号") + drawNumberSpace;
+                if (!isShowHalf){
+                    drawTStartX = getMaxTextWidth("2019")-drawNumberSpace/2;
+                }
                 if (isSetSelectedText && curAllDegree % 360 == 0) {
                     canvas.drawText(text, drawTStartX, textBound.height() / 2, mSelectedPaint);
                 } else {

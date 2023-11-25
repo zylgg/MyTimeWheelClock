@@ -1,6 +1,8 @@
 package com.example.admin.mytimewheelclock.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 /**
@@ -15,6 +17,14 @@ public class SizeUtils {
     public static int px2dp(Context context, float px) {
         final float density = context.getResources().getDisplayMetrics().density;
         return (int) (px / density + 0.5);
+    }
+
+    public static int getScreenWidth(Activity context){
+        DisplayMetrics dm = new DisplayMetrics();
+        context.getWindow().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int screenWidth = dm.widthPixels;
+        int screenHeight = dm.heightPixels;
+        return  screenWidth;
     }
 
     /**

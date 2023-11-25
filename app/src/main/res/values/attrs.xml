@@ -27,6 +27,7 @@
         <attr name="centerPointRadiu" format="dimension"/>
         <attr name="centerPointType" format="string"/>
         <attr name="isSecondGoSmooth" format="boolean"/>
+        <attr name="isShowHalf" format="boolean"></attr>
 
     </declare-styleable>
     

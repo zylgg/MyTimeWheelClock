@@ -127,6 +127,7 @@ public class AutoRotateMonthView extends View {
         if (TextUtils.isEmpty(centerPointType)) {
             centerPointType = "circle";
         }
+        isShowHalf=ta.getBoolean(R.styleable.TimeView_isShowHalf,true);
         sleepTime = 1000;
         ta.recycle();
     }
@@ -149,12 +150,16 @@ public class AutoRotateMonthView extends View {
         mSelectedPaint.setTextSize(textSize);
     }
 
+    /**
+     * 是否显示一半
+     */
+    private boolean isShowHalf=true;
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int size = SizeUtils.measureSize(mContext, widthMeasureSpec);
         int sizeH = SizeUtils.measureSize(mContext, heightMeasureSpec);
         setMeasuredDimension(sizeH, sizeH);
-        setTranslationX(-size / 2);
+        if (isShowHalf)setTranslationX(-size / 2);
     }
 
     /**
@@ -179,7 +184,7 @@ public class AutoRotateMonthView extends View {
         //外圆边界
 //        drawCircleOut(canvas);
         //圆心
-        drawCirclePoint(canvas);
+        if (isShowHalf)drawCirclePoint(canvas);
         //画时、分、秒针数字
         drawHourNumber(canvas);
     }
